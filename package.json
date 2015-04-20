@@ -1,0 +1,38 @@
+{
+  "name": "wink-js",
+  "version": "0.0.1",
+  "description": "Wink API wrapper",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha --recursive --no-timeouts test"
+  },
+  "dependencies": {
+    "async": "*",
+    "config-file": "~0.1.8"
+  },
+  "devDependencies": {
+    "chai": "~2.2.0",
+    "grunt": "~0.4.5",
+    "grunt-cli": "~0.1.13",
+    "grunt-contrib-jshint": "0.11.1",
+    "grunt-contrib-watch": "0.6.1",
+    "grunt-mocha-test": "0.12.7",
+    "grunt-apimock": "~0.1.2",
+    "grunt-env": "~0.4.4",
+    "mocha": "~2.2.4"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/winfinit/wink-js"
+  },
+  "keywords": [
+    "wink",
+    "home automation",
+    "wink api"
+  ],
+  "license": "GPL"
+}
