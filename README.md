@@ -38,6 +38,35 @@ Initialize wink framework (performs login)
 ```javascript
 wink.init(obj, callback);
 ```
+* **obj**
+    * **conf:** path to configuraiton file with settings below (*optional*)
+    * **client_id:** Client id issued by wink support
+    * **client_secret:** Client secret issued by wink support
+    * **username:** username(email) used to login to wink app
+    * **password:** password used to login to wink app
+
+```javascript
+wink.init({
+    "client_id": "xxx",
+    "client_secret": "xxx",
+    "username": "xxx@example.com",
+    "password": "Xx*.x!"
+});
+
+wink.init({
+    conf: "/path/to/config.json"
+}, callback);
+
+/*
+# config.json:
+{
+    "client_id": "CLIENT_ID_HERE",
+    "client_secret": "CLIENT_SECRET_HERE",
+    "username": "WINK_EMAIL_HERE",
+    "password": "WINK_PASSWORD_HERE"
+}
+*/
+```
 
 response:
 ```javascript
@@ -57,12 +86,8 @@ response:
     "token_endpoint": "https://winkapi.quirky.com/oauth2/token"
 }
 ```
-* **obj**
-    * **client_id:** Client id issued by wink support
-    * **client_secret:** Client secret issued by wink support
-    * **username:** username(email) used to login to wink app
-    * **password:** password used to login to wink app
-    
+
+
 ---
 # .user()
 Perform operations on behalf of a user
