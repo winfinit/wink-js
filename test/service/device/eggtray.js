@@ -19,4 +19,11 @@ describe("Wink devices", function() {
 		});
 	});
 
+	it("should return egg quantity", function(done) {
+		wink.user().device('Egg Minder', function(device) {
+			expect(device.quantity).to.be.a('number');
+			done();
+		});
+	});
+
 });

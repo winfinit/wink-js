@@ -57,8 +57,15 @@ function _http(data, callback) {
 
 		response.on('end', function () {
 		    console.log("response in http:", str);
-		    var authData = JSON.parse(str);
-		    callback(JSON.parse(str));
+		    try {
+		    	str = JSON.parse(str);
+		    } catch(e) {
+		    	console.log(e.stack);
+		    	console.log("raw message", str);
+		    	str = undefined;
+		    }
+
+		    callback(str);
 		});
 	});
 
@@ -69,7 +76,7 @@ function _http(data, callback) {
 	req.end();
 
 	req.on('error', function(e) {
-  		console.error(e);
+  		console.log("error at req: " ,e);
 	});
 
 }
