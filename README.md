@@ -706,6 +706,7 @@ wink.user().device('Stairs', function(device) {
 wink.user().device('Stairs', function(device) {
     device.brightness(50, callback);
 });
+```
 
 raw response from wink:
 
