@@ -12,7 +12,7 @@ official wink api documentaton URI <http://docs.wink.apiary.io/>
 - *Thermostats*
 - *Eggminder*
 
-**Devices can be used via raw getter and setter *device_group()* **
+**Devices can be used via raw getter and setter device_group()**
 
 
 ## Synopsis
