@@ -6,10 +6,12 @@
 
 official wink api documentaton URI <http://docs.wink.apiary.io/>
 
-## Supported devices
+## Devices with models
 - *Lights*
 - *Thermostats*
 - *Eggminder*
+
+*Other devices can be used via raw getter and setter (device_group())*
 
 ## Synopsis
 
@@ -667,6 +669,31 @@ Retrieve device by its name
 wink.user().device('Office lights', function(light_obj){
     // do whatever with light object
 });
+```
+
+## .device_group(group).device_id(id).get(callback)
+Retrieve device by its group and unique id
+
+```javascript
+wink.user().device_group('light_bulbs').device_id(123).get(
+    function(light_obj){
+        // do whatever with light object
+    }
+);
+```
+## .device_group(group).device_id(id).update(data,callback)
+Update device 
+
+```javascript
+wink.user().device_group('light_bulbs').device_id(123).update(
+    {
+        "desired_state": {
+            "powered": false
+        }
+    }, function(light_obj) {
+            // do whatever with light object
+    }
+);
 ```
 
 ---
