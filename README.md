@@ -11,6 +11,7 @@ official wink api documentaton URI <http://docs.wink.apiary.io/>
 - *Lights*
 - *Thermostats*
 - *Eggminder*
+
 **Devices can be used via raw getter and setter *device_group()* **
 
 
