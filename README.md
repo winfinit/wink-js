@@ -6,12 +6,12 @@
 
 official wink api documentaton URI <http://docs.wink.apiary.io/>
 
+**Devices can be used via raw getter and setter (*device_group()*)**
+
 ## Devices with models
 - *Lights*
 - *Thermostats*
 - *Eggminder*
-
-*Other devices can be used via raw getter and setter (device_group())*
 
 ## Synopsis
 
