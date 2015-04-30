@@ -8,7 +8,8 @@ var winkPort = undefined;
 
 var model = {
 	light_bulbs: require('./lib/model/light'),
-	eggtrays: require('./lib/model/eggtray')
+	eggtrays: require('./lib/model/eggtray'),
+	thermostats: require('./lib/model/thermostat')
 };
 
 /*
@@ -211,6 +212,8 @@ var wink = {
 								model.light_bulbs(device, wink);
 							} else if ( device.eggtray_id !== undefined ) {
 								model.eggtrays(device, wink);
+							} else if ( device.thermostat_id !== undefined ) {
+								model.thermostats(device, wink);
 							}
 							break;
 						}
@@ -258,8 +261,10 @@ var wink = {
 							// based on a group
 							if ( device_group === "light_bulbs" ) {
 								model.light_bulbs(data, wink);
-							} else if (device_grou === "eggtrays" ) {
+							} else if (device_group === "eggtrays" ) {
 								model.eggtrays(data, wink);
+							} else if (device_group === "thermostats" ) {
+								model.thermostats(data, wink);
 							}
 							callback(data);
 						});

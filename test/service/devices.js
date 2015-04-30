@@ -13,7 +13,7 @@ describe("Wink devices", function() {
 	});
 
 	it("should return device", function(done) {
-		wink.device_group('light_bulbs').device_id('389264').get(function(data) {		
+		wink.device_group('light_bulbs').device_id('562635').get(function(data) {		
 			expect(data).to.be.an('object');
 			expect(data.data).to.include.keys('name');
 			done();
