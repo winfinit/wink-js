@@ -195,6 +195,16 @@ var wink = {
 				GET({
 						path: "/users/" + user_id + "/" + device_type
 					}, function(data) {
+					        for( var dataIndex in data.data ) {
+					        	device = data.data[dataIndex];
+					        	if ( device.light_bulb_id !== undefined ) {
+					        		model.light_bulbs(device, wink);
+					        	} else if ( device.eggtray_id !== undefined ) {
+					        		model.eggtrays(device, wink);
+					        	} else if ( device.thermostat_id !== undefined ) {
+					        		model.thermostats(device, wink);
+					        	}
+					        }
 						callback(data);
 				});
 			},
