@@ -213,7 +213,7 @@ var wink = {
 				// and if device is not found, retry all
 				// devices
 				wink.user(user_id).devices(function(data) {
-					var name = new RegExp(device_name, 'i');
+					var name = new RegExp('^' + device_name + '$', 'i');
 					var device = undefined;
 					for( var dataIndex in data.data ) {
 						if ( name.test(data.data[dataIndex].name) ) {
