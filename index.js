@@ -12,6 +12,11 @@ var model = {
 	thermostats: require('./lib/model/thermostat')
 };
 
+var cache = {
+	device_type: {},
+	device: {}
+};
+
 /*
 	{
 		host: "www.example.com",
@@ -143,17 +148,33 @@ var wink = {
 		}
 
 		this.authenticate(auth_data, function(data) {
+
 			if ( callback !== undefined ) {
 				callback(data);
 			}
+			
 		});
 		return this;
+	},
+	// prime will preload all devices to cache
+	prime: function(callback) {
+		var parent = this;
+		this.user().devices(function(data) {
+			for (var index in data.data ) {
+				parent.user().device(data.data[index].name, function(){});
+			}
+		});
 	},
 	user: function(user_id) {
 		if ( user_id === undefined ) {
 			user_id = "me";
 		}
+		var parent = this;
 		return {
+			cache: {
+				device_type: {},
+				device: {}
+			},
 			create: function(data, callback) {
 				throw {name: "NotImplemented", message: "Not implemented yet"};
 			},
@@ -192,45 +213,62 @@ var wink = {
 					callback = device_type;
 					device_type = 'wink_devices';
 				}
-				GET({
-						path: "/users/" + user_id + "/" + device_type
-					}, function(data) {
-					        for( var dataIndex in data.data ) {
-					        	device = data.data[dataIndex];
-					        	if ( device.light_bulb_id !== undefined ) {
-					        		model.light_bulbs(device, wink);
-					        	} else if ( device.eggtray_id !== undefined ) {
-					        		model.eggtrays(device, wink);
-					        	} else if ( device.thermostat_id !== undefined ) {
-					        		model.thermostats(device, wink);
-					        	}
-					        }
-						callback(data);
-				});
+
+				if ( cache.device_type[device_type] ) {
+					callback(cache.device_type[device_type]);
+				} else {
+					GET({
+							path: "/users/" + user_id + "/" + device_type
+						}, function(data) {
+						        for( var dataIndex in data.data ) {
+						        	device = data.data[dataIndex];
+						        	if ( device.light_bulb_id !== undefined ) {
+						        		model.light_bulbs(device, wink);
+						        	} else if ( device.eggtray_id !== undefined ) {
+						        		model.eggtrays(device, wink);
+						        	} else if ( device.thermostat_id !== undefined ) {
+						        		model.thermostats(device, wink);
+						        	}
+						        }
+						        if (! process.env.WINK_NO_CACHE ) {
+						        	cache.device_type[device_type] = data;
+						        }
+								callback(data);
+					});					
+				}
+
 			},
 			device: function(device_name, callback) {
 				// TODO: cache response from devices
 				// and if device is not found, retry all
 				// devices
-				wink.user(user_id).devices(function(data) {
-					var name = new RegExp('^' + device_name + '$', 'i');
-					var device = undefined;
-					for( var dataIndex in data.data ) {
-						if ( name.test(data.data[dataIndex].name) ) {
-							device = data.data[dataIndex];
-							if ( device.light_bulb_id !== undefined ) {
-								model.light_bulbs(device, wink);
-							} else if ( device.eggtray_id !== undefined ) {
-								model.eggtrays(device, wink);
-							} else if ( device.thermostat_id !== undefined ) {
-								model.thermostats(device, wink);
+				if ( cache.device[device_name] ) {
+					callback(cache.device[device_name]);
+				} else {
+					wink.user(user_id).devices(function(data) {
+						var name = new RegExp('^' + device_name + '$', 'i');
+						var device = undefined;
+						for( var dataIndex in data.data ) {
+							if ( name.test(data.data[dataIndex].name) ) {
+								device = data.data[dataIndex];
+								if ( device.light_bulb_id !== undefined ) {
+									model.light_bulbs(device, wink);
+								} else if ( device.eggtray_id !== undefined ) {
+									model.eggtrays(device, wink);
+								} else if ( device.thermostat_id !== undefined ) {
+									model.thermostats(device, wink);
+								}
+								break;
 							}
-							break;
 						}
-					}
-					console.log("returning device:", device);
-					callback(device);
-				});
+						console.log("returning device:", device);
+						if (! process.env.WINK_NO_CACHE) {
+							cache.device[device_name] = device;
+						}
+						callback(device);
+					});					
+				}
+
 			},
 			robots: {
 				get: function(callback) {
