@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "async": "*",
-    "config-file": "~0.1.8"
+    "config-file": "~0.1.8",
+    "debug": ""
   },
   "devDependencies": {
     "chai": "~2.2.0",

@@ -1,3 +1,4 @@
+var debug = require('debug')('wink:http');
 var async = require('async');
 var http = require('https');
 var config = require('config-file');
@@ -36,7 +37,7 @@ function _http(data, callback) {
 	  //This is what changes the request to a POST request
 	  method: data.method,
 	  headers: {}
-	  
+
 	};
 
 	if ( data.data ) {
@@ -49,11 +50,9 @@ function _http(data, callback) {
 		options.headers['Authorization'] = "Bearer " + accessToken;
 	}
 
-	if ( process.env.WINK_HTTP_TRACE ) {
-		console.log('http options', options);
-		console.log('http data', data);
-	}
-	
+	debug('http options', options);
+	debug('http data', data);
+
 	var str = '';
 	var req = http.request(options, function(response) {
 
@@ -62,12 +61,12 @@ function _http(data, callback) {
 		});
 
 		response.on('end', function () {
-		    console.log("response in http:", str);
+		    debug("response in http:", str);
 		    try {
 		    	str = JSON.parse(str);
 		    } catch(e) {
-		    	console.log(e.stack);
-		    	console.log("raw message", str);
+		    	console.error(e.stack);
+		    	console.error("raw message", str);
 		    	str = undefined;
 		    }
 
@@ -78,11 +77,11 @@ function _http(data, callback) {
 	if ( data.data ) {
 		req.write(data.data);
 	}
-	
+
 	req.end();
 
 	req.on('error', function(e) {
-  		console.log("error at req: " ,e);
+  		console.error("error at req: " ,e);
 	});
 
 }
@@ -152,7 +151,7 @@ var wink = {
 			if ( callback !== undefined ) {
 				callback(data);
 			}
-			
+
 		});
 		return this;
 	},
@@ -234,7 +233,7 @@ var wink = {
 						        	cache.device_type[device_type] = data;
 						        }
 								callback(data);
-					});					
+					});
 				}
 
 			},
@@ -261,14 +260,62 @@ var wink = {
 								break;
 							}
 						}
-						console.log("returning device:", device);
+						debug("returning device:", device);
 						if (! process.env.WINK_NO_CACHE) {
 							cache.device[device_name] = device;
 						}
 						callback(device);
-					});					
+					});
 				}
 
+			},
+			groups: {
+				get: function(callback)  {
+					GET({
+						path: "/users/me/groups"
+					}, function(data) {
+						console.log(data);
+						callback(data);
+					});
+				},
+				create: function(callback)  {
+					throw {name: "NotImplemented", message: "Not implemented yet"};
+				}
+			},
+			group: {
+				name: function(name, callback) {
+					name = name.toLowerCase();
+
+					async.waterfall([
+						function(next) {
+							wink.user(user_id).groups.get(function(data) {
+								next(null, data);
+							});
+						},
+						function(data, next) {
+							var match = null;
+							data.data.some(function(group, index) {
+								if(group.name.toLowerCase() == name) {
+									match = group;
+									return true;
+								} else {
+									return false;
+								}
+							});
+							next(null, match);
+						}
+					], function(err, data) {
+						callback(data);
+					});
+				},
+				id: function(id, callback) {
+					GET({
+						path: "/groups/" + id
+					}, function(data) {
+						console.log(data);
+						callback(data);
+					});
+				}
 			},
 			robots: {
 				get: function(callback) {
@@ -295,7 +342,7 @@ var wink = {
 				}
 			}
 		}
-		
+
 	},
 	device_group: function(device_group) {
 		return {
@@ -358,24 +405,3 @@ var wink = {
 }
 
 module.exports = wink;
-
-// async.waterfall([
-// 	// authenticate first
-// 	function(callback) {
-// 		authenticate(function(authData) {
-// 			callback(null);
-// 		});
-// 	},
-// 	function(callback) {
-// 		lights_off(494715, function() {
-// 			callback(null);
-// 		});
-// 	}, 
-// 	function(callback) {
-// 		lights_on(494715, function() {
-// 			callback(null);
-// 		});
-// 	}
-// ], function(err) {
-// 	console.log('done');
-// })

@@ -2,7 +2,8 @@ var expect = require('chai').expect;
 var wink = require('../../index');
 
 describe("Wink user", function() {
-	it("should get initilized", function(done) {
+
+	before(function(done) {
 		wink.init({
 			conf: process.env.WINK_CONF || '.wink_auth.json'
 		}, function(data) {
@@ -10,8 +11,9 @@ describe("Wink user", function() {
 			done();
 		});
 	});
+
 	it("should retrieve user information", function(done) {
-		wink.user().get(function(data) {		
+		wink.user().get(function(data) {
 			expect(data).to.be.an('object');
 			expect(data).to.include.keys('data');
 			expect(data).to.include.keys('errors');
@@ -67,6 +69,26 @@ describe("Wink user", function() {
 			expect(data).to.include.keys('errors');
 			expect(data).to.include.keys('pagination');
 			expect(data.data).to.be.an('array');
+			done();
+		});
+	});
+	it("should return all groups", function(done) {
+		wink.user().groups.get(function(data) {
+			expect(data).to.be.an('object');
+			expect(data).to.include.keys('data');
+			expect(data.data).to.be.an('array');
+			done();
+		});
+	});
+	it.only("should return single group by name", function(done) {
+		wink.user().group.name("test", function(data) {
+			expect(data).to.be.an('object');
+			done();
+		});
+	});
+	it("should return single group by id", function(done) {
+		wink.user().group.id(3598245, function(data) {
+			expect(data).to.be.an('object');
 			done();
 		});
 	});
