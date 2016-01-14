@@ -231,7 +231,7 @@ var wink = {
 							        	}
 							        }
 										}
-						        if (! process.env.WINK_NO_CACHE ) {
+						        if (data && ! process.env.WINK_NO_CACHE ) {
 						        	cache.device_type[device_type] = data;
 						        }
 								callback(data);
