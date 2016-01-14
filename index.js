@@ -219,16 +219,18 @@ var wink = {
 					GET({
 							path: "/users/" + user_id + "/" + device_type
 						}, function(data) {
-						        for( var dataIndex in data.data ) {
-						        	device = data.data[dataIndex];
-						        	if ( device.light_bulb_id !== undefined ) {
-						        		model.light_bulbs(device, wink);
-						        	} else if ( device.eggtray_id !== undefined ) {
-						        		model.eggtrays(device, wink);
-						        	} else if ( device.thermostat_id !== undefined ) {
-						        		model.thermostats(device, wink);
-						        	}
-						        }
+							      if(data && data.data) {
+							        for( var dataIndex in data.data ) {
+							        	device = data.data[dataIndex];
+							        	if ( device.light_bulb_id !== undefined ) {
+							        		model.light_bulbs(device, wink);
+							        	} else if ( device.eggtray_id !== undefined ) {
+							        		model.eggtrays(device, wink);
+							        	} else if ( device.thermostat_id !== undefined ) {
+							        		model.thermostats(device, wink);
+							        	}
+							        }
+										}
 						        if (! process.env.WINK_NO_CACHE ) {
 						        	cache.device_type[device_type] = data;
 						        }
@@ -247,17 +249,19 @@ var wink = {
 					wink.user(user_id).devices(function(data) {
 						var name = new RegExp('^' + device_name + '$', 'i');
 						var device = undefined;
-						for( var dataIndex in data.data ) {
-							if ( name.test(data.data[dataIndex].name) ) {
-								device = data.data[dataIndex];
-								if ( device.light_bulb_id !== undefined ) {
-									model.light_bulbs(device, wink);
-								} else if ( device.eggtray_id !== undefined ) {
-									model.eggtrays(device, wink);
-								} else if ( device.thermostat_id !== undefined ) {
-									model.thermostats(device, wink);
+						if( data && data.data) {
+							for( var dataIndex in data.data ) {
+								if ( name.test(data.data[dataIndex].name) ) {
+									device = data.data[dataIndex];
+									if ( device.light_bulb_id !== undefined ) {
+										model.light_bulbs(device, wink);
+									} else if ( device.eggtray_id !== undefined ) {
+										model.eggtrays(device, wink);
+									} else if ( device.thermostat_id !== undefined ) {
+										model.thermostats(device, wink);
+									}
+									break;
 								}
-								break;
 							}
 						}
 						debug("returning device:", device);
