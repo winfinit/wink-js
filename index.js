@@ -55,12 +55,14 @@ function _http(data, callback) {
 
 	var str = '';
 	var req = http.request(options, function(response) {
+                var statusCode = response.statusCode;
 
 		response.on('data', function (chunk) {
-	    	str += chunk;
+	    	    str += chunk;
 		});
 
 		response.on('end', function () {
+                    debug("response code: %d", statusCode);
 		    debug("response in http:", str);
 		    try {
 		    	str = JSON.parse(str);
@@ -117,7 +119,9 @@ var wink = {
 				 path: '/oauth2/token',
 				 data: auth_data
 				}, function(response) {
-					accessToken = response.access_token;
+                                        if (response) {
+					    accessToken = response.access_token;
+                                        } 
 					callback(response);
 			});
 		} else {
@@ -278,7 +282,7 @@ var wink = {
 					GET({
 						path: "/users/me/groups"
 					}, function(data) {
-						console.log(data);
+						debug(data);
 						callback(data);
 					});
 				},
@@ -293,7 +297,11 @@ var wink = {
 					async.waterfall([
 						function(next) {
 							wink.user(user_id).groups.get(function(data) {
-								next(null, data);
+                                                                if (data){
+								    next(null, data);
+                                                                } else {
+                                                                    next("error");
+                                                                }
 							});
 						},
 						function(data, next) {
@@ -316,7 +324,7 @@ var wink = {
 					GET({
 						path: "/groups/" + id
 					}, function(data) {
-						console.log(data);
+						debug(data);
 						callback(data);
 					});
 				}
