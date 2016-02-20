@@ -10,7 +10,8 @@ var winkPort = undefined;
 var model = {
 	light_bulbs: require('./lib/model/light'),
 	eggtrays: require('./lib/model/eggtray'),
-	thermostats: require('./lib/model/thermostat')
+	thermostats: require('./lib/model/thermostat'),
+	robots: require('./lib/model/robot')
 };
 
 var cache = {
@@ -121,7 +122,7 @@ var wink = {
 				}, function(response) {
                                         if (response) {
 					    accessToken = response.access_token;
-                                        } 
+                                        }
 					callback(response);
 			});
 		} else {
@@ -334,7 +335,13 @@ var wink = {
 					GET({
 						path: "/users/" + user_id + "/robots"
 					}, function(data) {
-						callback(data);
+						if(data && data.data) {
+							for( var dataIndex in data.data ) {
+								device = data.data[dataIndex];
+								model.robots(device, wink);
+							}
+							callback(data);
+						}
 					});
 				},
 				create: function(data, callback) {
@@ -354,7 +361,26 @@ var wink = {
 				}
 			}
 		}
-
+	},
+	robot_id: function(robot_id) {
+		return {
+			get: function(callback) {
+				GET({
+					path: "/robots/"+robot_id
+				},function(data) {
+					model.robots(data.data,wink);
+					callback(data.data);
+				});
+			},
+			update: function(data,callback) {
+				PUT({
+					path: "/robots/"+robot_id,
+					data: data
+				},function(data) {
+					callback(data);
+				});
+			}
+		}
 	},
 	device_group: function(device_group) {
 		return {
