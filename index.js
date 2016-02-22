@@ -16,7 +16,8 @@ var model = {
 
 var cache = {
 	device_type: {},
-	device: {}
+	device: {},
+	robot: {}
 };
 
 /*
@@ -168,6 +169,7 @@ var wink = {
 				parent.user().device(data.data[index].name, function(){});
 			}
 		});
+		this.user().robots(function(data) {});
 	},
 	user: function(user_id) {
 		if ( user_id === undefined ) {
@@ -177,7 +179,8 @@ var wink = {
 		return {
 			cache: {
 				device_type: {},
-				device: {}
+				device: {},
+				robot: {}
 			},
 			create: function(data, callback) {
 				throw {name: "NotImplemented", message: "Not implemented yet"};
@@ -339,6 +342,9 @@ var wink = {
 							for( var dataIndex in data.data ) {
 								device = data.data[dataIndex];
 								model.robots(device, wink);
+								if (! process.env.WINK_NO_CACHE) {
+									cache.robot[device.robot_id] = device;
+								}
 							}
 							callback(data);
 						}
@@ -365,12 +371,20 @@ var wink = {
 	robot_id: function(robot_id) {
 		return {
 			get: function(callback) {
-				GET({
-					path: "/robots/"+robot_id
-				},function(data) {
-					model.robots(data.data,wink);
-					callback(data.data);
-				});
+				if(cache.robot[robot_id]) {
+					callback(cache.robot[robot_id]);
+				}
+				else {
+					GET({
+						path: "/robots/"+robot_id
+					},function(data) {
+						model.robots(data.data,wink);
+						if (! process.env.WINK_NO_CACHE) {
+							cache.robot[data.data.robot_id] = data.data;
+						}
+						callback(data.data);
+					});
+				}
 			},
 			update: function(data,callback) {
 				PUT({

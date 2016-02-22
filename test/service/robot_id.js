@@ -12,6 +12,22 @@ describe("Wink robots", function() {
 		});
 	});
 
+	it("should cache all the robots",function(done) {
+			wink.user().robots.get(function(data) {
+				var g = wink.GET
+				wink.GET = function(data,callback) {
+					callback(null);
+				}
+				for(var i = 0; i< data.data.length; i++) {
+					wink.robot_id(data.data[i].robot_id).get(function(device) {
+							expect(device).to.be.an('object');
+							expect(device == data.data[i]).to.equal(true);
+						});
+				}
+				wink.GET = g;
+				done();
+			});
+	});
   it("should return robots", function(done) {
     wink.user().robots.get(function(data) {
       expect(data).to.be.an('object');
