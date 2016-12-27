@@ -1,10 +1,10 @@
 # wink-js
 
-**wink-js** is a library that allows one to access wink API resources from a user perspective. Its target is to simplify integrations with wink backend and hopefully allow more people to create fun applications for your wink connected home.
+**wink-js** is a library that allows one to access [Wink](http://www.wink.com/) API resources from a user perspective. Its target is to simplify integrations with the Wink backend and hopefully allow more people to create fun applications for your Wink connected home.
 
-**This is not an official library from wink, please do not contact them for support, however you can always open bugs against this project on github**
+**This is not an official library from Wink, please do not contact them for support, however you can always open bugs against this project on GitHub.**
 
-official wink api documentaton URI <http://docs.wink.apiary.io/>
+This library currently uses Wink API v1. Documentation: <http://docs.wink.apiary.io/>
 
 
 ## Devices with helpers
