@@ -141,7 +141,7 @@ var wink = {
 		} else if ( auth_data.hostname ) {
 			winkUri = auth_data.hostname;
 		} else {
-			winkUri = "winkapi.quirky.com";
+			winkUri = "api.wink.com";
 		}
 
 		if ( process.env.WINK_PORT ) {

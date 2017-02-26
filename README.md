@@ -87,14 +87,14 @@ response:
         "access_token": "xxx",
         "refresh_token": "xxx",
         "token_type": "bearer",
-        "token_endpoint": "https://winkapi.quirky.com/oauth2/token"
+        "token_endpoint": "https://api.wink.com/oauth2/token"
     },
     "errors": [],
     "pagination": {},
     "access_token": "xxx",
     "refresh_token": "xxx",
     "token_type": "bearer",
-    "token_endpoint": "https://winkapi.quirky.com/oauth2/token"
+    "token_endpoint": "https://api.wink.com/oauth2/token"
 }
 ```
 
