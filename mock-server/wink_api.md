@@ -1,6 +1,6 @@
 FORMAT: 1A
 
-HOST: https://winkapi.quirky.com
+HOST: https://api.wink.com
 
 # Wink API
 The Wink API connects Wink devices to users, apps, each other, and the wider web.
@@ -128,7 +128,7 @@ A user has the following specific attributes:
               "access_token": "example_access_token_like_135fhn80w35hynainrsg0q824hyn",
               "refresh_token": "...",
               "token_type": "bearer",
-              "token_endpoint": "https://winkapi.quirky.com/oauth2/token"
+              "token_endpoint": "https://api.wink.com/oauth2/token"
             },
             "locale": "en_us",
             "units": {},
