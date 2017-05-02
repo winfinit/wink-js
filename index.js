@@ -133,7 +133,7 @@ var wink = {
 	init: function(auth_data, callback) {
 		if ( auth_data.conf !== undefined ) {
 			// get data from config
-			auth_data = config.load(auth_data.conf);
+			auth_data = config.parse(auth_data.conf);
 		}
 
 		if ( process.env.WINK_HOST ) {
